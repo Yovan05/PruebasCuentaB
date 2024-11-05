@@ -20,7 +20,7 @@ public class MySQLConnection {
     public static Connection get(){
         Connection connection =null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/cine_db","root","12345");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank_db","root","12345");
         }catch(Exception ex){
             System.err.print("Error: "+ex.getMessage());
         }

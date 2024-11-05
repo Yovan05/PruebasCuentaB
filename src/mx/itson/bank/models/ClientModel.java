@@ -4,10 +4,67 @@
  */
 package mx.itson.bank.models;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.persistence.MySQLConnection;
+
 /**
  *
  * @author alexi
  */
 public class ClientModel {
     
+    /**
+     * Get the Client object with the id enter
+     * @param id of the client to search
+     * @return the requested client
+     */
+    public static Client getClient(int id){
+        Client client = new Client();
+        try {
+            Connection connection = MySQLConnection.get();
+            PreparedStatement statement = connection.prepareStatement("Select * FROM clients where id=?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+            client.setId(resultSet.getInt(1));
+            client.setName(resultSet.getString(2));
+            client.setPassword(resultSet.getString(3));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error: "+ex.getMessage());
+        }
+        
+        
+        return client;
+    }
+    
+    /**
+     * Add a new client to the database
+     * @param name of the new Client
+     * @param password of the new Client
+     * @return boolean where if true, a new client has been successfully added to the database and if false, a failure has occurred
+     */
+    public static boolean save(String name, String password){
+        boolean result = false;
+        try {
+            Connection connection = MySQLConnection.get();
+            String query ="INSERT INTO clients (name, password) VALUES (?, ?)";
+            PreparedStatement statament = connection.prepareStatement(query);
+            statament.setString(1, name);
+            statament.setString(2, password);
+            statament.execute();
+            
+            result = statament.getUpdateCount() == 1;
+        } catch (SQLException ex) {
+            System.err.print("Error: "+ex.getMessage());
+        }
+
+        return result;
+    }
 }
