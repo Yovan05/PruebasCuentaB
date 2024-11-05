@@ -12,7 +12,19 @@ public class Client {
     private int id;
     private String name;
     private String password;
+    private String user;
 
+    public Client(int id, String name, String password, String user) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.user = user;
+    }
+
+    public Client(){
+        
+    }
+    
     /**
      * @return the id
      */
@@ -53,6 +65,14 @@ public class Client {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
     
     
