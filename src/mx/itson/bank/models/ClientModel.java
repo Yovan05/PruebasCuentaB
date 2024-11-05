@@ -20,26 +20,26 @@ import mx.itson.bank.persistence.MySQLConnection;
 public class ClientModel {
     
     /**
-     * Get the Client object with the id enter
-     * @param id of the client to search
-     * @return the requested client
+     * Get the Client object with the name enter
+     * @param name of the User to search
+     * @return the requested User
      */
-    public static Client getClient(int id){
+    public static Client getUser(String name){
         Client client = new Client();
         try {
             Connection connection = MySQLConnection.get();
-            PreparedStatement statement = connection.prepareStatement("Select * FROM clients where id=?");
-            statement.setInt(1, id);
+            PreparedStatement statement = connection.prepareStatement("Select * FROM bank_db where name=?;");
+            statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-            client.setId(resultSet.getInt(1));
-            client.setName(resultSet.getString(2));
-            client.setPassword(resultSet.getString(3));
-            }
+                client.setId(resultSet.getInt(1));
+                client.setName(resultSet.getString(2));
+                client.setPassword(resultSet.getString(3));
+            }    
+            connection.close();
         } catch (SQLException ex) {
             System.err.println("Error: "+ex.getMessage());
         }
-        
         
         return client;
     }
