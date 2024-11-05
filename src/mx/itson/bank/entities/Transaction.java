@@ -21,6 +21,21 @@ public class Transaction {
     private Date date;
     private Integer relatedAccountId;
 
+    public Transaction(int id, int accountId, TransactionType transactionType, double amount, String description, Date date, Integer relatedAccountId) {
+        this.id = id;
+        this.accountId = accountId;
+        this.transactionType = transactionType;
+        this.amount = amount;
+        this.description = description;
+        this.date = date;
+        this.relatedAccountId = relatedAccountId;
+    }
+
+    public Transaction(){
+        
+    }
+    
+    
     /**
      * @return the id
      */
