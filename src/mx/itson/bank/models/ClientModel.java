@@ -28,7 +28,7 @@ public class ClientModel {
         Client client = new Client();
         try {
             Connection connection = MySQLConnection.get();
-            PreparedStatement statement = connection.prepareStatement("Select * FROM bank_db where name=?;");
+            PreparedStatement statement = connection.prepareStatement("Select * FROM bys3drn156ac3amr2lnd where name=?;");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {

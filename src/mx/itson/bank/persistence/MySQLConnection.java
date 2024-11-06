@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 /**
- *
+ *mysql://uirqb1xi6anizmbm:KAL6hWV6ExHcHbKNWTbo@bys3drn156ac3amr2lnd-mysql.services.clever-cloud.com:3306/bys3drn156ac3amr2lnd
  * @author alexi
  */
 public class MySQLConnection {
@@ -20,7 +20,7 @@ public class MySQLConnection {
     public static Connection get(){
         Connection connection =null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank_db","root","12345");
+            connection = DriverManager.getConnection("jdbc:mysql://uirqb1xi6anizmbm:KAL6hWV6ExHcHbKNWTbo@bys3drn156ac3amr2lnd-mysql.services.clever-cloud.com:3306/bys3drn156ac3amr2lnd","uirqb1xi6anizmbm","KAL6hWV6ExHcHbKNWTbo");
         }catch(Exception ex){
             System.err.print("Error: "+ex.getMessage());
         }

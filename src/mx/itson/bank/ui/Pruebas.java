@@ -17,7 +17,7 @@ public class Pruebas {
      */
     public static void main(String[] args) {
         
-        boolean register = ClientModel.save("Yovan Rodriguez", "Contra123");
+        boolean register = ClientModel.save("testeo", "Contra123");
         System.out.println(register);
     }
     
