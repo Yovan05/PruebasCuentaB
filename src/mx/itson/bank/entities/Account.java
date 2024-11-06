@@ -14,6 +14,17 @@ public class Account {
     private int numClient;
     private double balance;
 
+    public Account(int id, int numClient, double balance) {
+        this.id = id;
+        this.numClient = numClient;
+        this.balance = balance;
+    }
+
+     public Account(){
+         
+     }
+    
+    
     /**
      * @return the id
      */
