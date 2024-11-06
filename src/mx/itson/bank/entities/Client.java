@@ -13,6 +13,7 @@ public class Client {
     private String name;
     private String password;
     private String user;
+    private int keyId;
 
     public Client(int id, String name, String password, String user) {
         this.id = id;
@@ -73,6 +74,20 @@ public class Client {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    /**
+     * @return the keyId
+     */
+    public int getKeyId() {
+        return keyId;
+    }
+
+    /**
+     * @param keyId the keyId to set
+     */
+    public void setKeyId(int keyId) {
+        this.keyId = keyId;
     }
     
     

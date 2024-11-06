@@ -4,7 +4,13 @@
  */
 package mx.itson.bank.ui;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import mx.itson.bank.entities.ClientKey;
 import mx.itson.bank.models.ClientModel;
+import mx.itson.bank.models.Encrypt;
+import mx.itson.bank.models.KeyModel;
 
 /**
  *
@@ -15,10 +21,21 @@ public class Pruebas {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         
-        boolean register = ClientModel.save("testeo", "Contra123");
+        String name = "hola";
+        String password = "hola";
+        ClientKey clienKey = new ClientKey();
+        clienKey = Encrypt.keys(password);
+        KeyModel.save(clienKey.getPublicKey(), clienKey.getPrivateKey());
+        int keyId = KeyModel.getKeyId(clienKey.getPublicKey());
+        boolean register =ClientModel.save(name, clienKey.getPassword(), keyId);
+        
+     //   boolean register = ClientModel.save("testeo", "Contra123");
         System.out.println(register);
+        
+        
+        
     }
     
 }
