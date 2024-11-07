@@ -6,86 +6,166 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.math.BigDecimal;
-import mx.itson.bank.entities.Transaction;
-import mx.itson.bank.enums.TransactionType;
 import mx.itson.bank.persistence.MySQLConnection;
 
 public class TransactionModel {
 
-    public static boolean save(int accountId, String transactionType, BigDecimal amount, String transactionDescription, Date date, Integer relatedAccountId) {
-        boolean result = false;
-        try {
-            Connection connection = MySQLConnection.get();
-            String query = "INSERT INTO transactions (account_id, transaction_type, amount, transaction_description, date, related_account_id) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, accountId);
-            statement.setString(2, transactionType);
-            statement.setBigDecimal(3, amount);
-            statement.setString(4, transactionDescription);
-            statement.setDate(5, date);
-            if (relatedAccountId != null) {
-                statement.setInt(6, relatedAccountId);
-            } else {
-                statement.setNull(6, java.sql.Types.INTEGER);
+    // Método para realizar un depósito
+    public static boolean deposit(int accountId, BigDecimal amount, String description, Date date) {
+        boolean success = false;
+        try (Connection connection = MySQLConnection.get()) {
+            // Verificar si la cuenta existe
+            if (!accountExists(accountId)) {
+                return false;
             }
-            statement.execute();
-            
-            result = statement.getUpdateCount() == 1;
-            connection.close();
+
+            // Actualizar saldo
+            String updateBalanceQuery = "UPDATE accounts SET balance = balance + ? WHERE id = ?";
+            try (PreparedStatement updateStmt = connection.prepareStatement(updateBalanceQuery)) {
+                updateStmt.setBigDecimal(1, amount);
+                updateStmt.setInt(2, accountId);
+                updateStmt.executeUpdate();
+            }
+
+            // Registrar la transacción
+            String insertTransactionQuery = "INSERT INTO transactions (account_id, transaction_type, amount, transaction_description, date) VALUES (?, 'DEPOSIT', ?, ?, ?)";
+            try (PreparedStatement insertStmt = connection.prepareStatement(insertTransactionQuery)) {
+                insertStmt.setInt(1, accountId);
+                insertStmt.setBigDecimal(2, amount);
+                insertStmt.setString(3, description);
+                insertStmt.setDate(4, date);
+                insertStmt.executeUpdate();
+            }
+
+            success = true;
         } catch (SQLException ex) {
-            System.err.print("Error: " + ex.getMessage());
+            ex.printStackTrace();
         }
-        return result;
+        return success;
     }
 
-   public static Transaction getTransaction(int transactionId) {
-    Transaction transaction = null;
-    try {
-        Connection connection = MySQLConnection.get();
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM transactions WHERE id = ?;");
-        statement.setInt(1, transactionId);
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            transaction = new Transaction();
-            transaction.setId(resultSet.getInt("id"));
-            transaction.setAccountId(resultSet.getInt("account_id"));
-            // Convertir el String a TransactionType usando valueOf
-            transaction.setTransactionType(TransactionType.valueOf(resultSet.getString("transaction_type")));
-            transaction.setAmount(resultSet.getDouble("amount"));
-            transaction.setDescription(resultSet.getString("transaction_description"));
-            transaction.setDate(resultSet.getDate("date"));
-            
-            // Manejo de relatedAccountId
-            int relatedAccountId = resultSet.getInt("related_account_id");
-            if (!resultSet.wasNull()) {
-                transaction.setRelatedAccountId(relatedAccountId);
-            } else {
-                transaction.setRelatedAccountId(null);
+    // Método para realizar un retiro
+    public static boolean withdraw(int accountId, BigDecimal amount, String description, Date date) {
+        boolean success = false;
+        try (Connection connection = MySQLConnection.get()) {
+            // Verificar si la cuenta existe y tiene saldo suficiente
+            if (!accountExists(accountId) || !hasSufficientBalance(accountId, amount)) {
+                return false;
             }
-        }
-        connection.close();
-    } catch (SQLException ex) {
-        System.err.println("Error: " + ex.getMessage());
-    }
-    return transaction;
-}
 
-
-    public static boolean transactionExists(int transactionId) {
-        boolean result = false;
-        try {
-            Connection connection = MySQLConnection.get();
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM transactions WHERE id = ?;");
-            statement.setInt(1, transactionId);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                int count = resultSet.getInt(1);
-                result = count > 0;
+            // Actualizar saldo
+            String updateBalanceQuery = "UPDATE accounts SET balance = balance - ? WHERE id = ?";
+            try (PreparedStatement updateStmt = connection.prepareStatement(updateBalanceQuery)) {
+                updateStmt.setBigDecimal(1, amount);
+                updateStmt.setInt(2, accountId);
+                updateStmt.executeUpdate();
             }
-            connection.close();
+
+            // Registrar la transacción
+            String insertTransactionQuery = "INSERT INTO transactions (account_id, transaction_type, amount, transaction_description, date) VALUES (?, 'WITHDRAW', ?, ?, ?)";
+            try (PreparedStatement insertStmt = connection.prepareStatement(insertTransactionQuery)) {
+                insertStmt.setInt(1, accountId);
+                insertStmt.setBigDecimal(2, amount);
+                insertStmt.setString(3, description);
+                insertStmt.setDate(4, date);
+                insertStmt.executeUpdate();
+            }
+
+            success = true;
         } catch (SQLException ex) {
-            System.err.println("Error: " + ex.getMessage());
+            ex.printStackTrace();
         }
-        return result;
+        return success;
+    }
+
+    // Método para realizar una transferencia
+    public static boolean transfer(int fromAccountId, int toAccountId, BigDecimal amount, String description, Date date) {
+        boolean success = false;
+        try (Connection connection = MySQLConnection.get()) {
+            // Verificar si las cuentas existen y si la cuenta de origen tiene saldo suficiente
+            if (!accountExists(fromAccountId) || !accountExists(toAccountId) || !hasSufficientBalance(fromAccountId, amount)) {
+                return false;
+            }
+
+            // Retirar de la cuenta de origen
+            String withdrawQuery = "UPDATE accounts SET balance = balance - ? WHERE id = ?";
+            try (PreparedStatement withdrawStmt = connection.prepareStatement(withdrawQuery)) {
+                withdrawStmt.setBigDecimal(1, amount);
+                withdrawStmt.setInt(2, fromAccountId);
+                withdrawStmt.executeUpdate();
+            }
+
+            // Depositar en la cuenta de destino
+            String depositQuery = "UPDATE accounts SET balance = balance + ? WHERE id = ?";
+            try (PreparedStatement depositStmt = connection.prepareStatement(depositQuery)) {
+                depositStmt.setBigDecimal(1, amount);
+                depositStmt.setInt(2, toAccountId);
+                depositStmt.executeUpdate();
+            }
+
+            // Registrar la transacción de origen
+            String insertTransactionQueryFrom = "INSERT INTO transactions (account_id, transaction_type, amount, transaction_description, date, related_account_id) VALUES (?, 'TRANSFER', ?, ?, ?, ?)";
+            try (PreparedStatement insertStmt = connection.prepareStatement(insertTransactionQueryFrom)) {
+                insertStmt.setInt(1, fromAccountId);
+                insertStmt.setBigDecimal(2, amount);
+                insertStmt.setString(3, description);
+                insertStmt.setDate(4, date);
+                insertStmt.setInt(5, toAccountId);
+                insertStmt.executeUpdate();
+            }
+
+            // Registrar la transacción 
+            String insertTransactionQueryTo = "INSERT INTO transactions (account_id, transaction_type, amount, transaction_description, date, related_account_id) VALUES (?, 'TRANSFER_RECEIVED', ?, ?, ?, ?)";
+            try (PreparedStatement insertStmt = connection.prepareStatement(insertTransactionQueryTo)) {
+                insertStmt.setInt(1, toAccountId);
+                insertStmt.setBigDecimal(2, amount);
+                insertStmt.setString(3, "Received: " + description);
+                insertStmt.setDate(4, date);
+                insertStmt.setInt(5, fromAccountId);
+                insertStmt.executeUpdate();
+            }
+
+            success = true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return success;
+    }
+
+    // Método para saber si la cuenta existe 
+    private static boolean accountExists(int accountId) {
+        boolean exists = false;
+        try (Connection connection = MySQLConnection.get()) {
+            String query = "SELECT COUNT(*) FROM accounts WHERE id = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setInt(1, accountId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    exists = rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return exists;
+    }
+
+    // Método para ver si el saldo es suficiente o no tiene dineroxddd
+    private static boolean hasSufficientBalance(int accountId, BigDecimal amount) {
+        boolean sufficient = false;
+        try (Connection connection = MySQLConnection.get()) {
+            String query = "SELECT balance FROM accounts WHERE id = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setInt(1, accountId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    BigDecimal balance = rs.getBigDecimal("balance");
+                    sufficient = balance.compareTo(amount) >= 0;
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return sufficient;
     }
 }
