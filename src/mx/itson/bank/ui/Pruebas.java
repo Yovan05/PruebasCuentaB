@@ -23,7 +23,7 @@ public class Pruebas {
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         
-        String name = "hola";
+        String name = "salsa";
         String password = "hola";
         ClientKey clienKey = new ClientKey();
         clienKey = Encrypt.keys(password);

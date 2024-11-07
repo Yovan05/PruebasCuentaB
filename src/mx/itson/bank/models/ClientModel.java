@@ -20,7 +20,7 @@ import mx.itson.bank.persistence.MySQLConnection;
 public class ClientModel {
     
     /**
-     * Check if there is another user with the same name
+     * Check if there is another client with the same name
      * @param name of the user to search
      * @return boolean where if true, a user with that name already exists and if false, no one with the same name exists
      */
@@ -49,7 +49,7 @@ public class ClientModel {
     
     
     /**
-     * Add a new user to the database
+     * Add a new client to the database
      * @param name of the new user
      * @param password of the new user
      * @param keyId of the new user
@@ -76,7 +76,7 @@ public class ClientModel {
     }
     
     /**
-     * Get the User object with the name enter
+     * Get the Client object with the name enter
      * @param name of the User to search
      * @return the requested User
      */
@@ -101,57 +101,5 @@ public class ClientModel {
         
         
         return user;
-    }
-    
-    
-    
-    
-    /**
-     * Get the Client object with the name enter
-     * @param name of the User to search
-     * @return the requested User
-     *
-    public static Client getUser(String name){
-        Client client = new Client();
-        try {
-            Connection connection = MySQLConnection.get();
-            PreparedStatement statement = connection.prepareStatement("Select * FROM clients where name=?;");
-            statement.setString(1, name);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                client.setId(resultSet.getInt(1));
-                client.setName(resultSet.getString(2));
-                client.setPassword(resultSet.getString(3));
-            }    
-            connection.close();
-        } catch (SQLException ex) {
-            System.err.println("Error: "+ex.getMessage());
-        }
-        
-        return client;
-    }
-    
-    /**
-     * Add a new client to the database
-     * @param name of the new Client
-     * @param password of the new Client
-     * @return boolean where if true, a new client has been successfully added to the database and if false, a failure has occurred
-     *
-    public static boolean save(String name, String password){
-        boolean result = false;
-        try {
-            Connection connection = MySQLConnection.get();
-            String query ="INSERT INTO clients (name, password) VALUES (?, ?)";
-            PreparedStatement statament = connection.prepareStatement(query);
-            statament.setString(1, name);
-            statament.setString(2, password);
-            statament.execute();
-            
-            result = statament.getUpdateCount() == 1;
-        } catch (SQLException ex) {
-            System.err.print("Error: "+ex.getMessage());
-        }
-
-        return result;
-    }*/
+    }  
 }
