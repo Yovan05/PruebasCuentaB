@@ -4,6 +4,10 @@
  */
 package mx.itson.bank.ui;
 
+import java.sql.Connection;
+import javax.swing.JOptionPane;
+import mx.itson.bank.entities.Client;
+
 /**
  *
  * @author alexi
@@ -30,14 +34,15 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txfUsuario = new javax.swing.JTextField();
+        txfUser = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
-        txfContraseña = new javax.swing.JTextField();
+        txfPassword = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         btnEntrar = new javax.swing.JButton();
+        btnRegistro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,17 +58,17 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Lucida Sans", 1, 18)); // NOI18N
         jLabel3.setText("Contraseña");
 
-        txfUsuario.setBackground(java.awt.SystemColor.activeCaption);
-        txfUsuario.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
-        txfUsuario.setForeground(new java.awt.Color(255, 255, 255));
-        txfUsuario.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txfUsuario.setBorder(null);
+        txfUser.setBackground(java.awt.SystemColor.activeCaption);
+        txfUser.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+        txfUser.setForeground(new java.awt.Color(255, 255, 255));
+        txfUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txfUser.setBorder(null);
 
-        txfContraseña.setBackground(java.awt.SystemColor.activeCaption);
-        txfContraseña.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
-        txfContraseña.setForeground(new java.awt.Color(255, 255, 255));
-        txfContraseña.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txfContraseña.setBorder(null);
+        txfPassword.setBackground(java.awt.SystemColor.activeCaption);
+        txfPassword.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+        txfPassword.setForeground(new java.awt.Color(255, 255, 255));
+        txfPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txfPassword.setBorder(null);
 
         jLabel4.setFont(new java.awt.Font("Lucida Sans", 1, 18)); // NOI18N
         jLabel4.setText("Usuario");
@@ -76,8 +81,25 @@ public class Login extends javax.swing.JFrame {
         btnEntrar.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         btnEntrar.setForeground(new java.awt.Color(0, 0, 0));
         btnEntrar.setText("Entrar");
-        btnEntrar.setBorder(null);
+        btnEntrar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnEntrar.setFocusCycleRoot(true);
+        btnEntrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntrarActionPerformed(evt);
+            }
+        });
+
+        btnRegistro.setBackground(new java.awt.Color(255, 255, 255));
+        btnRegistro.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
+        btnRegistro.setForeground(new java.awt.Color(0, 0, 0));
+        btnRegistro.setText("Registrarse");
+        btnRegistro.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnRegistro.setFocusCycleRoot(true);
+        btnRegistro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistroActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -96,10 +118,10 @@ public class Login extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txfContraseña)
+                                .addComponent(txfPassword)
                                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txfUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                                .addComponent(txfUser, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                                 .addComponent(jSeparator1))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(217, 217, 217)
@@ -115,7 +137,8 @@ public class Login extends javax.swing.JFrame {
                         .addGap(200, 200, 200))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(btnEntrar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(221, 221, 221))))
+                        .addGap(221, 221, 221))
+                    .addComponent(btnRegistro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,7 +151,7 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txfUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txfUser, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -136,13 +159,14 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txfContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63)
                 .addComponent(btnEntrar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addComponent(btnRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -158,6 +182,16 @@ public class Login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistroActionPerformed
+        Registro frmRegistro = new Registro();
+        frmRegistro.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnRegistroActionPerformed
+
+    private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
+        
+    }//GEN-LAST:event_btnEntrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,6 +230,7 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEntrar;
+    private javax.swing.JButton btnRegistro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -205,7 +240,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField txfContraseña;
-    private javax.swing.JTextField txfUsuario;
+    private javax.swing.JTextField txfPassword;
+    private javax.swing.JTextField txfUser;
     // End of variables declaration//GEN-END:variables
 }
