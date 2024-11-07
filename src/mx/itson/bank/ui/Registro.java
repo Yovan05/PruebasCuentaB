@@ -78,6 +78,8 @@ public class Registro extends javax.swing.JFrame {
             }
         });
 
+        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
+
         btnCrear.setBackground(new java.awt.Color(255, 255, 255));
         btnCrear.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         btnCrear.setText("Crear");
@@ -88,6 +90,8 @@ public class Registro extends javax.swing.JFrame {
                 btnCrearMouseClicked(evt);
             }
         });
+
+        jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
 
         txfUser.setBackground(java.awt.SystemColor.activeCaption);
         txfUser.setFont(new java.awt.Font("Lucida Sans", 1, 18)); // NOI18N
@@ -104,6 +108,8 @@ public class Registro extends javax.swing.JFrame {
                 txfUserKeyTyped(evt);
             }
         });
+
+        jSeparator3.setBackground(new java.awt.Color(0, 0, 0));
 
         txfPassword.setBackground(java.awt.SystemColor.activeCaption);
         txfPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -294,6 +300,8 @@ public class Registro extends javax.swing.JFrame {
                 client = ClientModel.getUser(user);
                 AccountModel.save(client.getId(), BigDecimal.valueOf(0));
                 dispose();
+                Login frmLogin = new Login();
+                frmLogin.setVisible(true);
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvalidKeyException ex) {
