@@ -273,7 +273,8 @@ public class Login extends javax.swing.JFrame {
 
     private void txfPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfPasswordKeyTyped
         int key = evt.getKeyChar();
-        if(key == 34 || key == 59){
+        if(key == 34 || key == 59 || key==39 || key ==32){
+            JOptionPane.showMessageDialog(this, "No se admiten ; ' \"");
             evt.consume();
         }
     }//GEN-LAST:event_txfPasswordKeyTyped
