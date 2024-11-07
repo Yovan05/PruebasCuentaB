@@ -4,9 +4,20 @@
  */
 package mx.itson.bank.ui;
 
+import java.awt.event.KeyEvent;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import mx.itson.bank.entities.Client;
+import mx.itson.bank.entities.Key;
+import mx.itson.bank.models.ClientModel;
+import mx.itson.bank.models.Encrypt;
+import mx.itson.bank.models.KeyModel;
 
 /**
  *
@@ -51,7 +62,7 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Lucida Sans", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Login");
+        jLabel1.setText("Iniciar sesion");
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/avatar.png"))); // NOI18N
 
@@ -63,12 +74,22 @@ public class Login extends javax.swing.JFrame {
         txfUser.setForeground(new java.awt.Color(255, 255, 255));
         txfUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txfUser.setBorder(null);
+        txfUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txfUserKeyTyped(evt);
+            }
+        });
 
         txfPassword.setBackground(java.awt.SystemColor.activeCaption);
         txfPassword.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         txfPassword.setForeground(new java.awt.Color(255, 255, 255));
         txfPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txfPassword.setBorder(null);
+        txfPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txfPasswordKeyTyped(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Lucida Sans", 1, 18)); // NOI18N
         jLabel4.setText("Usuario");
@@ -79,10 +100,14 @@ public class Login extends javax.swing.JFrame {
 
         btnEntrar.setBackground(new java.awt.Color(255, 255, 255));
         btnEntrar.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
-        btnEntrar.setForeground(new java.awt.Color(0, 0, 0));
         btnEntrar.setText("Entrar");
         btnEntrar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnEntrar.setFocusCycleRoot(true);
+        btnEntrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEntrarMouseClicked(evt);
+            }
+        });
         btnEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEntrarActionPerformed(evt);
@@ -91,10 +116,14 @@ public class Login extends javax.swing.JFrame {
 
         btnRegistro.setBackground(new java.awt.Color(255, 255, 255));
         btnRegistro.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
-        btnRegistro.setForeground(new java.awt.Color(0, 0, 0));
         btnRegistro.setText("Registrarse");
         btnRegistro.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnRegistro.setFocusCycleRoot(true);
+        btnRegistro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnRegistroMouseClicked(evt);
+            }
+        });
         btnRegistro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegistroActionPerformed(evt);
@@ -108,9 +137,6 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(202, 202, 202)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(73, 73, 73)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel5)
@@ -122,7 +148,8 @@ public class Login extends javax.swing.JFrame {
                                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(txfUser, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-                                .addComponent(jSeparator1))))
+                                .addComponent(jSeparator1))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(217, 217, 217)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -192,6 +219,63 @@ public class Login extends javax.swing.JFrame {
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         
     }//GEN-LAST:event_btnEntrarActionPerformed
+
+    private void btnRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegistroMouseClicked
+   
+    }//GEN-LAST:event_btnRegistroMouseClicked
+
+    private void btnEntrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEntrarMouseClicked
+        String user = txfUser.getText();
+        String password = txfPassword.getText();
+        
+        String userEmpty = user.replaceAll(" ", "");
+        String passwordEmpty = password.replaceAll(" ", "");
+        
+        if(ClientModel.searchUser(user) && !(userEmpty.length() ==0 || passwordEmpty.length()==0)){
+            Client client = new Client();
+            client = ClientModel.getUser(user);
+            
+            Key key = new Key();
+            key = KeyModel.getKey(client.getKeyId());
+            
+            try {
+                if(Encrypt.login(key.getPublicKey(), password, client.getPassword())){
+                    
+                    JOptionPane.showMessageDialog(this, "Si funciona");
+                    
+                    
+                }else{
+                    JOptionPane.showMessageDialog(this, "Contraseña incorrecta");
+                }
+            } catch (SignatureException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidKeySpecException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidKeyException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }  
+        }else{
+            JOptionPane.showMessageDialog(this, "Usuario inexistente");
+        }
+    }//GEN-LAST:event_btnEntrarMouseClicked
+
+    private void txfUserKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfUserKeyTyped
+        char key = evt.getKeyChar();
+        if (!Character.isLetter(key) && key != KeyEvent.VK_BACK_SPACE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "Solo se admiten letras");
+        }
+    }//GEN-LAST:event_txfUserKeyTyped
+
+    private void txfPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfPasswordKeyTyped
+        int key = evt.getKeyChar();
+        if(key == 34 || key == 59 || key==39 || key ==32){
+            JOptionPane.showMessageDialog(this, "No se admiten ; ' \"");
+            evt.consume();
+        }
+    }//GEN-LAST:event_txfPasswordKeyTyped
 
     /**
      * @param args the command line arguments

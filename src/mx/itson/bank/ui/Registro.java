@@ -4,6 +4,21 @@
  */
 package mx.itson.bank.ui;
 
+import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.entities.ClientKey;
+import mx.itson.bank.models.AccountModel;
+import mx.itson.bank.models.ClientModel;
+import mx.itson.bank.models.Encrypt;
+import mx.itson.bank.models.KeyModel;
+
 /**
  *
  * @author aldop
@@ -57,28 +72,47 @@ public class Registro extends javax.swing.JFrame {
         txfName.setForeground(new java.awt.Color(255, 255, 255));
         txfName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txfName.setBorder(null);
+        txfName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txfNameKeyTyped(evt);
+            }
+        });
 
         btnCrear.setBackground(new java.awt.Color(255, 255, 255));
         btnCrear.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
-        btnCrear.setForeground(new java.awt.Color(0, 0, 0));
         btnCrear.setText("Crear");
         btnCrear.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnCrear.setFocusCycleRoot(true);
+        btnCrear.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCrearMouseClicked(evt);
+            }
+        });
 
         txfUser.setBackground(java.awt.SystemColor.activeCaption);
         txfUser.setFont(new java.awt.Font("Lucida Sans", 1, 18)); // NOI18N
         txfUser.setForeground(new java.awt.Color(255, 255, 255));
-        txfUser.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txfUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txfUser.setBorder(null);
         txfUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txfUserActionPerformed(evt);
             }
         });
+        txfUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txfUserKeyTyped(evt);
+            }
+        });
 
         txfPassword.setBackground(java.awt.SystemColor.activeCaption);
         txfPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txfPassword.setBorder(null);
+        txfPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txfPasswordKeyTyped(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Lucida Sans", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -94,7 +128,6 @@ public class Registro extends javax.swing.JFrame {
 
         btnLogin.setBackground(new java.awt.Color(255, 255, 255));
         btnLogin.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
-        btnLogin.setForeground(new java.awt.Color(0, 0, 0));
         btnLogin.setText("Login");
         btnLogin.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnLogin.setFocusCycleRoot(true);
@@ -215,6 +248,63 @@ public class Registro extends javax.swing.JFrame {
         frmLogin.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txfUserKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfUserKeyTyped
+        char key = evt.getKeyChar();
+        if (!Character.isLetter(key) && key != KeyEvent.VK_BACK_SPACE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "Solo se admiten letras");
+        }
+    }//GEN-LAST:event_txfUserKeyTyped
+
+    private void txfPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfPasswordKeyTyped
+        int key = evt.getKeyChar();
+        if(key == 34 || key == 59 || key==39 || key ==32){
+            JOptionPane.showMessageDialog(this, "No se admiten ; ' \"");
+            evt.consume();
+        }      
+    }//GEN-LAST:event_txfPasswordKeyTyped
+
+    private void txfNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfNameKeyTyped
+        char key = evt.getKeyChar();
+        if (!Character.isLetter(key) && key != KeyEvent.VK_BACK_SPACE && key != ' ') {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "Solo se admiten letras sin espacios");
+        }
+    }//GEN-LAST:event_txfNameKeyTyped
+
+    private void btnCrearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCrearMouseClicked
+        
+        String name = txfName.getText();
+        String user = txfUser.getText();
+        String password = txfPassword.getText();
+        
+        String userEmpty = user.replaceAll(" ", "");
+        String passwordEmpty = password.replaceAll(" ", "");
+        
+        if(!(ClientModel.searchUser(user) || userEmpty.length() ==0 || passwordEmpty.length()==0)){
+            ClientKey clientKey = new ClientKey();
+            try {
+                clientKey = Encrypt.keys(password);
+                KeyModel.save(clientKey.getPublicKey(), clientKey.getPrivateKey());
+                int keyId = KeyModel.getKeyId(clientKey.getPublicKey());
+                
+                ClientModel.save(name, clientKey.getPassword(), keyId, user);
+                Client client = new Client();
+                client = ClientModel.getUser(user);
+                AccountModel.save(client.getId(), BigDecimal.valueOf(0));
+                dispose();
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidKeyException ex) {
+                Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SignatureException ex) {
+                Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Nombre de usuario ya existente o falta rellenar un campo");
+        }
+    }//GEN-LAST:event_btnCrearMouseClicked
 
     /**
      * @param args the command line arguments
