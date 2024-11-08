@@ -34,7 +34,7 @@ public class Historial extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel1.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
 

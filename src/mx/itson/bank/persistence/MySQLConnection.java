@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 /**
- *mysql://uirqb1xi6anizmbm:KAL6hWV6ExHcHbKNWTbo@bys3drn156ac3amr2lnd-mysql.services.clever-cloud.com:3306/bys3drn156ac3amr2lnd
+
  * @author alexi
  */
 public class MySQLConnection {
@@ -20,7 +20,7 @@ public class MySQLConnection {
     public static Connection get(){
         Connection connection =null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://uirqb1xi6anizmbm:KAL6hWV6ExHcHbKNWTbo@bys3drn156ac3amr2lnd-mysql.services.clever-cloud.com:3306/bys3drn156ac3amr2lnd","uirqb1xi6anizmbm","KAL6hWV6ExHcHbKNWTbo");
+           connection = DriverManager.getConnection("jdbc:mysql://itsonappweb.com/itsonapp_244601","itsonapp_244601","244601db#934R");
         }catch(Exception ex){
             System.err.print("Error: "+ex.getMessage());
         }
