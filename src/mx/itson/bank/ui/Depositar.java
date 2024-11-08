@@ -4,9 +4,13 @@
  */
 package mx.itson.bank.ui;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import mx.itson.bank.entities.Account;
 import mx.itson.bank.entities.Client;
+import mx.itson.bank.entities.Transaction;
 import mx.itson.bank.models.ClientModel;
+import mx.itson.bank.models.TransactionModel;
 
 /**
  *
@@ -202,8 +206,16 @@ public class Depositar extends javax.swing.JFrame {
     }//GEN-LAST:event_txfIdActionPerformed
 
     private void btnDepositMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDepositMouseClicked
-
         
+        int accountId= Integer.parseInt(txfId.getText());
+        BigDecimal amount= new BigDecimal(txfAmount.getText());
+        
+        TransactionModel.deposit(accountId, amount);
+                
+        Interfaz interfaz = new Interfaz();
+        interfaz.setAccount(this.account.getClientId());
+        interfaz.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnDepositMouseClicked
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
