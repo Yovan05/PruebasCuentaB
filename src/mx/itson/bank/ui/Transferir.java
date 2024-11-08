@@ -15,6 +15,8 @@ import static mx.itson.bank.models.TransactionModel.getAccountIdByCriteria;
  * @author ricardorodriguez
  */
 public class Transferir extends javax.swing.JFrame {
+    
+    
 
 
     public Transferir() {
@@ -310,20 +312,20 @@ public class Transferir extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Por favor, ingrese un monto válido.");
         return;
     }
-
-// Validar si la cuenta de origen tiene saldo suficiente
-    Integer cuentaOrigenId = getAccountIdByCriteria("transaction_type", "TRANSFER"); // Usamos el método para obtener el account_id de la cuenta de origen
-    if (cuentaOrigenId == null || !tieneSaldoSuficiente(cuentaOrigenId, monto)) {
+    Integer cuentaOrigenId = getAccountIdByCriteria("transaction_type", "TRANSFER");
+System.out.println("Cuenta de origen obtenida: " + cuentaOrigenId);
+if (cuentaOrigenId == null || !tieneSaldoSuficiente(cuentaOrigenId, monto)) {
     JOptionPane.showMessageDialog(null, "Saldo insuficiente en la cuenta de origen o cuenta no encontrada.");
+    System.out.println("Error: Cuenta no encontrada o saldo insuficiente. ID: " + cuentaOrigenId);
     return;
-    }
+}
 
-
-    // Validar que la cuenta de destino exista
-    if (!existeCuenta(Integer.parseInt(userIdDestino))) {
-        JOptionPane.showMessageDialog(null, "La cuenta de destino no existe.");
-        return;
-    }
+// Validar que la cuenta de destino exista
+if (!existeCuenta(Integer.parseInt(userIdDestino))) {
+    JOptionPane.showMessageDialog(null, "La cuenta de destino no existe.");
+    System.out.println("Error: La cuenta de destino no existe. ID: " + userIdDestino);
+    return;
+}
 
     // Realizar la transferencia (llamando al método de transferencia)
     Date fecha = new Date(System.currentTimeMillis()); // Fecha actual
@@ -334,13 +336,23 @@ public class Transferir extends javax.swing.JFrame {
     } else {
         JOptionPane.showMessageDialog(null, "Error al realizar la transferencia. Intente nuevamente.");
     }
+    
 }
 
 // Método para realizar la transferencia
 private boolean realizarTransferencia(int cuentaOrigenId, int cuentaDestinoId, BigDecimal monto, String descripcion, Date date) {
     
     // Lógica de conexión y transferencia que ya habíamos discutido
-    return TransactionModel.transfer(cuentaOrigenId, cuentaDestinoId, monto, descripcion, (java.sql.Date) date);
+    System.out.println("Valor de date: " + date);
+if (date != null) {
+    return TransactionModel.transfer(cuentaOrigenId, cuentaDestinoId, monto, descripcion, new java.sql.Date(date.getTime()));
+} else {
+    // Manejar el caso de fecha nula
+    System.out.println("La fecha es nula, manejando caso especial...");
+    return false; // Devuelve false o haz la lógica que sea adecuada
+}
+
+
 }
 
 // Método para verificar si la cuenta de origen tiene saldo suficiente
@@ -355,7 +367,7 @@ private boolean existeCuenta(int cuentaId) {
     return TransactionModel.accountExists(cuentaId);
         
     }//GEN-LAST:event_btnTransferMouseClicked
-
+    
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
         Interfaz frmInterfaz = new Interfaz();
         frmInterfaz.setVisible(true);

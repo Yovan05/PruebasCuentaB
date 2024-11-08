@@ -77,9 +77,13 @@ public class TransactionModel {
         }
         return success;
     }
+    
+    
 
     // Método para realizar una transferencia
     public static boolean transfer(int fromAccountId, int toAccountId, BigDecimal amount, String description, Date date) {
+       String transactionType = "Tipo de transacción";
+        System.out.println("Valor de transaction_type: " + transactionType);
         boolean success = false;
         try (Connection connection = MySQLConnection.get()) {
             // Verificar si las cuentas existen y si la cuenta de origen tiene saldo suficiente
@@ -151,16 +155,18 @@ public class TransactionModel {
     }
     
 
-    public static Integer getAccountIdByCriteria(String criteriaColumn, String criteriaValue) {
+public static Integer getAccountIdByCriteria(String criteriaColumn, String criteriaValue) {
     Integer accountId = null;
     try (Connection connection = MySQLConnection.get()) {
-        // Consulta ajustada a la tabla transactions
         String query = "SELECT account_id FROM transactions WHERE " + criteriaColumn + " = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, criteriaValue);
+            stmt.setString(1, criteriaValue); // Considera el tipo correcto de dato aquí
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 accountId = rs.getInt("account_id");
+                System.out.println("Account ID found: " + accountId);
+            } else {
+                System.out.println("No matching account ID found for criteria: " + criteriaValue);
             }
         }
     } catch (SQLException ex) {
@@ -168,6 +174,7 @@ public class TransactionModel {
     }
     return accountId;
 }
+
 
 
     // Método para ver si el saldo es suficiente o no tiene dineroxddd
