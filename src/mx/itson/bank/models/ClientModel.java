@@ -78,9 +78,9 @@ public class ClientModel {
     }
     
     /**
-     * Get the Client object with the name enter
+     * Get the Client object with the user enter
      * @param user of the Client to search
-     * @return the requested User
+     * @return the requested Client
      */
     public static Client getUser(String user){
         Client client = new Client();
@@ -91,7 +91,7 @@ public class ClientModel {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 client.setId(resultSet.getInt(1));
-                client.setUser(resultSet.getString(2));
+                client.setName(resultSet.getString(2));
                 client.setPassword(resultSet.getString(3));
                 client.setKeyId(resultSet.getInt(4));
                 client.setUser(resultSet.getString(5));
@@ -102,7 +102,35 @@ public class ClientModel {
             System.err.println("Error: "+ex.getMessage());
         }
         
+        return client;
+    }  
+    
+    /**
+     * Get the Client object with the id
+     * @param id of the Client to search
+     * @return the requested Client
+     */
+    public static Client getUserByID(int id){
+        Client client = new Client();
+        try {
+            Connection connection = MySQLConnection.get();
+            PreparedStatement statement = connection.prepareStatement("Select * FROM clients where id=?;");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                client.setId(resultSet.getInt(1));
+                client.setName(resultSet.getString(2));
+                client.setPassword(resultSet.getString(3));
+                client.setKeyId(resultSet.getInt(4));
+                client.setUser(resultSet.getString(5));
+            }
+            
+            connection.close();
+        } catch (SQLException ex) {
+            System.err.println("Error: "+ex.getMessage());
+        }
         
         return client;
     }  
+    
 }

@@ -13,8 +13,10 @@ import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import mx.itson.bank.entities.Account;
 import mx.itson.bank.entities.Client;
 import mx.itson.bank.entities.Key;
+import mx.itson.bank.models.AccountModel;
 import mx.itson.bank.models.ClientModel;
 import mx.itson.bank.models.Encrypt;
 import mx.itson.bank.models.KeyModel;
@@ -239,11 +241,11 @@ public class Login extends javax.swing.JFrame {
             key = KeyModel.getKey(client.getKeyId());
             
             try {
-                if(Encrypt.login(key.getPublicKey(), password, client.getPassword())){
-                    
-                    JOptionPane.showMessageDialog(this, "Si funciona");
-                    
-                    
+                if(Encrypt.login(key.getPublicKey(), password, client.getPassword())){                   
+                    Interfaz interfaz = new Interfaz();
+                    interfaz.setAccount(client.getId());
+                    interfaz.setVisible(true);   
+                    this.dispose();
                 }else{
                     JOptionPane.showMessageDialog(this, "Contraseña incorrecta");
                 }

@@ -4,18 +4,37 @@
  */
 package mx.itson.bank.ui;
 
+import mx.itson.bank.entities.Account;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.models.AccountModel;
+import mx.itson.bank.models.ClientModel;
+
 /**
  *
  * @author ricardorodriguez
  */
 public class Interfaz extends javax.swing.JFrame {
 
+    Account account = new Account();
+    Client client = new Client();
     /**
      * Creates new form Interfaz
      */
     public Interfaz() {
         initComponents();
     }
+    
+    /**
+     * Fill the labels
+     * @param clientId the account to set
+     */
+    public void setAccount(int clientId){
+        this.account = AccountModel.getAccountByClientId(clientId);
+        this.client= ClientModel.getUserByID(account.getClientId());
+        lblName.setText(client.getName());
+        lblId.setText(account.getId()+"");
+        lblBalance.setText(account.getBalance()+"");
+    }    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -290,8 +309,10 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btnDepositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepositActionPerformed
         Depositar frmDepositar = new Depositar();
+        frmDepositar.setAccount(this.account);
         frmDepositar.setVisible(true);
         this.dispose();
+
     }//GEN-LAST:event_btnDepositActionPerformed
 
     private void btnTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferActionPerformed
