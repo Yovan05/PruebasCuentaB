@@ -4,6 +4,7 @@
  */
 package mx.itson.bank.ui;
 
+
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -13,12 +14,17 @@ import mx.itson.bank.entities.Client;
 import mx.itson.bank.models.AccountModel;
 import mx.itson.bank.models.ClientModel;
 import mx.itson.bank.models.TransactionModel;
+import mx.itson.bank.entities.Account;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.models.ClientModel;
+
 
 /**
  *
  * @author ricardorodriguez
  */
 public class Retirar extends javax.swing.JFrame {
+
     
     Account account = new Account();
     Client client = new Client();
@@ -31,7 +37,8 @@ public class Retirar extends javax.swing.JFrame {
         initComponents();
     }
     
-    
+
+
         public void setAccount(Account account){
         this.account = account;
         this.client= ClientModel.getUserByID(account.getClientId());
@@ -39,6 +46,11 @@ public class Retirar extends javax.swing.JFrame {
         txfId.setVisible(false);
         lblCuenta.setVisible(false);
         }
+
+    /**
+     * 
+     * @param account 
+     */
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -238,11 +250,17 @@ public class Retirar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDepositMouseClicked
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
+
         System.out.println("Account ID: " + (this.account != null ? this.account.getClientId() : "null"));
 
         Interfaz frmInterfaz = new Interfaz();
         frmInterfaz.setAccount(this.account.getClientId());
         frmInterfaz.setVisible(true);
+
+        Interfaz interfaz = new Interfaz();
+        interfaz.setAccount(this.account.getClientId());
+        interfaz.setVisible(true);
+
         this.dispose();
     }//GEN-LAST:event_btnReturnActionPerformed
 

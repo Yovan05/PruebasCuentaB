@@ -20,6 +20,8 @@ public class Transaction {
     private String description;
     private Date date;
     private Integer relatedAccountId;
+    
+    
 
     public Transaction(int id, int accountId, TransactionType transactionType, double amount, String description, Date date, Integer relatedAccountId) {
         this.id = id;
