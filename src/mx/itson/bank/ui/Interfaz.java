@@ -31,12 +31,12 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         lblBalance = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btnHistory = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnDeposit = new javax.swing.JButton();
+        btnTransfer = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
@@ -49,22 +49,27 @@ public class Interfaz extends javax.swing.JFrame {
 
         jPanel3.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
 
-        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 0, 16)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Lucida Sans", 1, 16)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Balance Cuenta");
 
-        lblBalance.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        lblBalance.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+        lblBalance.setForeground(new java.awt.Color(0, 0, 0));
         lblBalance.setText("Dinero (3,000)");
 
-        jLabel4.setFont(new java.awt.Font("Helvetica Neue", 0, 16)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Lucida Sans", 1, 16)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Historial");
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/historial-de-transacciones (1).png"))); // NOI18N
-        jButton3.setBorderPainted(false);
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton3.setOpaque(true);
+        btnHistory.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
+        btnHistory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/historial-de-transacciones (1).png"))); // NOI18N
+        btnHistory.setBorderPainted(false);
+        btnHistory.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistoryActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -78,7 +83,7 @@ public class Interfaz extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnHistory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14))
         );
         jPanel3Layout.setVerticalGroup(
@@ -91,26 +96,37 @@ public class Interfaz extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblBalance)
-                    .addComponent(jButton3))
+                    .addComponent(btnHistory))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
 
-        jLabel6.setFont(new java.awt.Font("Helvetica Neue", 0, 16)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Lucida Sans", 1, 16)); // NOI18N
         jLabel6.setText("Depositar");
 
+        jLabel7.setFont(new java.awt.Font("Lucida Sans", 1, 16)); // NOI18N
         jLabel7.setText("Transferir");
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/depositar (1).png"))); // NOI18N
-        jButton1.setBorderPainted(false);
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeposit.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
+        btnDeposit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/depositar (1).png"))); // NOI18N
+        btnDeposit.setBorderPainted(false);
+        btnDeposit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeposit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDepositActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/transferir-datos (1).png"))); // NOI18N
-        jButton2.setBorderPainted(false);
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTransfer.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
+        btnTransfer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/transferir-datos (1).png"))); // NOI18N
+        btnTransfer.setBorderPainted(false);
+        btnTransfer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTransfer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransferActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -120,13 +136,13 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(69, 69, 69)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
-                        .addComponent(jButton2)))
+                        .addComponent(btnTransfer)))
                 .addContainerGap(71, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -134,8 +150,8 @@ public class Interfaz extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(13, 13, 13)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(btnDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTransfer))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -146,13 +162,16 @@ public class Interfaz extends javax.swing.JFrame {
         jPanel5.setBackground(java.awt.SystemColor.activeCaption);
         jPanel5.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Lucida Sans", 0, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("HOLA!");
 
-        lblNombre.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblNombre.setFont(new java.awt.Font("Lucida Sans", 0, 18)); // NOI18N
+        lblNombre.setForeground(new java.awt.Color(0, 0, 0));
         lblNombre.setText("NOMBRE");
 
-        jLabel1.setFont(new java.awt.Font("Hiragino Mincho ProN", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Lucida Sans", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("ZAIRABANK");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -170,16 +189,17 @@ public class Interfaz extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(21, 36, Short.MAX_VALUE))
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(lblNombre))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(lblNombre))))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -192,7 +212,7 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addContainerGap(300, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,7 +222,7 @@ public class Interfaz extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(43, 43, 43)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -222,6 +242,24 @@ public class Interfaz extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
+        Historial frmHistorial = new Historial();
+        frmHistorial.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnHistoryActionPerformed
+
+    private void btnDepositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepositActionPerformed
+        Depositar frmDepositar = new Depositar();
+        frmDepositar.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnDepositActionPerformed
+
+    private void btnTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferActionPerformed
+        Transferir frmTransferir= new Transferir();
+        frmTransferir.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnTransferActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,9 +297,9 @@ public class Interfaz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnDeposit;
+    private javax.swing.JButton btnHistory;
+    private javax.swing.JButton btnTransfer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
