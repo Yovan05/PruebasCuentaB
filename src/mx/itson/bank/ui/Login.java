@@ -91,7 +91,6 @@ public class Login extends javax.swing.JFrame {
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/round-account-button-with-user-inside_icon-icons.com_72596.png"))); // NOI18N
 
-        btnEntrar.setBackground(new java.awt.Color(255, 255, 255));
         btnEntrar.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         btnEntrar.setText("Entrar");
         btnEntrar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -107,7 +106,6 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        btnRegistro.setBackground(new java.awt.Color(255, 255, 255));
         btnRegistro.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         btnRegistro.setText("Registrarse");
         btnRegistro.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
