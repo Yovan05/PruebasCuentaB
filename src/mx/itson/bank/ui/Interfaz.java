@@ -303,6 +303,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
         Historial frmHistorial = new Historial();
+        frmHistorial.setAccount(this.account);
         frmHistorial.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnHistoryActionPerformed

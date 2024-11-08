@@ -7,9 +7,15 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import mx.itson.bank.entities.Transaction;
+import mx.itson.bank.enums.TransactionType;
 import mx.itson.bank.persistence.MySQLConnection;
 
 public class TransactionModel {
+
+    
 
     // Método para realizar un depósito
     public static boolean deposit(int accountId, BigDecimal amount) {
@@ -197,4 +203,62 @@ public static Integer getAccountIdByCriteria(String criteriaColumn, String crite
         }
         return sufficient;
     }
+
+
+    public static List<Transaction> getTransactionHistory(int accountId) {
+       List<Transaction> transactions = new ArrayList<>();
+    try {
+        Connection connection = MySQLConnection.get();
+        PreparedStatement statement = connection.prepareStatement("Select * FROM transactions where account_id=?;");
+        statement.setInt(1, accountId);
+        ResultSet resultSet = statement.executeQuery();
+        while(resultSet.next()) {
+            Transaction t = new Transaction();
+            t.setId(resultSet.getInt(1));
+            t.setAccountId(resultSet.getInt(2));
+            
+            // Convertir el tipo de transacción a mayúsculas y mapearlo al valor correcto del enum
+            String transactionTypeStr = resultSet.getString(3).toUpperCase();
+            TransactionType transactionType = mapTransactionType(transactionTypeStr);
+            
+            // Si el tipo de transacción es inválido, omitir esta entrada
+            if (transactionType == null) {
+                System.err.println("Warning: Unknown transaction type '" + transactionTypeStr + "'. Skipping this entry.");
+                continue;
+            }
+            t.setTransactionType(transactionType);
+
+            t.setAmount(resultSet.getDouble(4));
+            t.setDescription(resultSet.getString(5));
+            t.setDate(resultSet.getDate(6));
+            t.setRelatedAccountId(resultSet.getInt(7));
+            
+            transactions.add(t);
+        }
+        
+        connection.close();
+    } catch (SQLException ex) {
+        System.err.println("Error: " + ex.getMessage());
+    }
+    
+    return transactions;
+}
+
+// Método auxiliar para mapear los valores de la base de datos al enum
+private static TransactionType mapTransactionType(String transactionTypeStr) {
+    switch (transactionTypeStr) {
+        case "DEPOSIT":
+        case "DEPOSITS":
+            return TransactionType.DEPOSITS;
+        case "WITHDRAWAL":
+        case "WITHDRAWALS":
+            return TransactionType.WITHDRAWALS;
+        case "TRANSFER":
+        case "TRANSFER_RECEIVED":
+        case "TRANSFERS":
+            return TransactionType.TRANSFERS;
+        default:
+            return null; // Devuelve null si no hay coincidencia
+    }
+}
 }
