@@ -21,24 +21,19 @@ public class Interfaz extends javax.swing.JFrame {
      */
     public Interfaz() {
         initComponents();
-   //     updateData();
     }
     
+    /**
+     * Fill the labels
+     * @param account the account to set
+     */
     public void setAccount(Account account){
         this.account = account;
         this.client= ClientModel.getUserByID(account.getClientId());
         lblName.setText(client.getName());
         lblId.setText(account.getId()+"");
         lblBalance.setText(account.getBalance()+"");
-
-    }
-    
-   /* public void updateData(){
-        this.client= ClientModel.getUserByID(account.getClientId());
-        lblName.setText(client.getName());
-        lblId.setText(account.getId()+"");
-        lblBalance.setText(account.getBalance()+"");
-    }*/
+    }    
 
     /**
      * This method is called from within the constructor to initialize the form.
