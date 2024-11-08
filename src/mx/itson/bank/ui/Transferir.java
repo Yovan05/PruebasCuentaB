@@ -298,7 +298,7 @@ public class Transferir extends javax.swing.JFrame {
         return;
     }
 
-    // Validar que el monto sea un número positivo
+    // Validar que el monto sea un número positivo asd
     BigDecimal monto;
     try {
         monto = new BigDecimal(montoStr);
