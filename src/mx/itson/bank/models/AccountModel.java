@@ -86,4 +86,30 @@ public class AccountModel {
         }
         return result;
     }
+    
+    /**
+     * Get the Account object by cliendID
+     * @param clientId of the account to search
+     * @return the requested Client
+     */
+    public static Account getAccountByClientId(int clientId) {
+        Account account = new Account();
+        try {
+            Connection connection = MySQLConnection.get();
+            String query = "SELECT * FROM accounts WHERE client_id = ?;";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, clientId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                account.setId(resultSet.getInt(1));
+                account.setClientId(resultSet.getInt(2));
+                account.setBalance(resultSet.getBigDecimal(3));
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            System.err.println("Error: " + ex.getMessage());
+        }
+        return account;
+    }
+    
 }
