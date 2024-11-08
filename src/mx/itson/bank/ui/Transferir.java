@@ -4,15 +4,19 @@
  */
 package mx.itson.bank.ui;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import mx.itson.bank.models.TransactionModel;
+import static mx.itson.bank.models.TransactionModel.getAccountIdByCriteria;
+
 /**
  *
  * @author ricardorodriguez
  */
 public class Transferir extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Transferir
-     */
+
     public Transferir() {
         initComponents();
     }
@@ -38,11 +42,11 @@ public class Transferir extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        txfUser = new javax.swing.JTextField();
+        txtUserIdDestino = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        txfDescription = new javax.swing.JTextField();
-        txfAmount = new javax.swing.JFormattedTextField();
+        txtDescripcion = new javax.swing.JTextField();
+        txtMonto = new javax.swing.JFormattedTextField();
         btnTransfer = new javax.swing.JButton();
         btnReturn = new javax.swing.JButton();
 
@@ -134,12 +138,10 @@ public class Transferir extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Ingresa el usuario");
 
-        txfUser.setBackground(new java.awt.Color(255, 255, 255));
-        txfUser.setForeground(new java.awt.Color(0, 0, 0));
-        txfUser.setBorder(null);
-        txfUser.addActionListener(new java.awt.event.ActionListener() {
+        txtUserIdDestino.setBorder(null);
+        txtUserIdDestino.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfUserActionPerformed(evt);
+                txtUserIdDestinoActionPerformed(evt);
             }
         });
 
@@ -149,19 +151,18 @@ public class Transferir extends javax.swing.JFrame {
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Descripción");
 
-        txfDescription.setBackground(new java.awt.Color(255, 255, 255));
-        txfDescription.setForeground(new java.awt.Color(0, 0, 0));
-        txfDescription.setBorder(null);
+        txtDescripcion.setBorder(null);
 
-        txfAmount.setBackground(new java.awt.Color(255, 255, 255));
-        txfAmount.setBorder(null);
-        txfAmount.setForeground(new java.awt.Color(0, 0, 0));
-        txfAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        txtMonto.setBorder(null);
+        txtMonto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        txtMonto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMontoActionPerformed(evt);
+            }
+        });
 
-        btnTransfer.setBackground(new java.awt.Color(255, 255, 255));
         btnTransfer.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         btnTransfer.setText("Tranferir");
-        btnTransfer.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnTransfer.setFocusCycleRoot(true);
         btnTransfer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -188,9 +189,9 @@ public class Transferir extends javax.swing.JFrame {
                             .addComponent(jLabel10))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txfUser)
-                            .addComponent(txfDescription, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-                            .addComponent(txfAmount))))
+                            .addComponent(txtUserIdDestino)
+                            .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                            .addComponent(txtMonto))))
                 .addContainerGap(55, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -206,17 +207,17 @@ public class Transferir extends javax.swing.JFrame {
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txfUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUserIdDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txfAmount))
+                    .addComponent(txtMonto))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(txfDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addComponent(btnTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -258,7 +259,7 @@ public class Transferir extends javax.swing.JFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 27, Short.MAX_VALUE))
+                        .addGap(0, 30, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -273,18 +274,85 @@ public class Transferir extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txfUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfUserActionPerformed
+    private void txtUserIdDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserIdDestinoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txfUserActionPerformed
+    }//GEN-LAST:event_txtUserIdDestinoActionPerformed
 
     private void btnTransferMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTransferMouseClicked
+         // Obtener los datos de los campos de texto
+    String userIdDestino = txtUserIdDestino.getText();
+    String montoStr = txtMonto.getText();
+    String descripcion = txtDescripcion.getText();
 
+    // Validar que los campos no estén vacíos
+    if (userIdDestino.isEmpty() || montoStr.isEmpty() || descripcion.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos.");
+        return;
+    }
+
+    // Validar que el monto sea un número positivo
+    BigDecimal monto;
+    try {
+        monto = new BigDecimal(montoStr);
+        if (monto.compareTo(BigDecimal.ZERO) <= 0) {
+            JOptionPane.showMessageDialog(null, "El monto debe ser mayor que 0.");
+            return;
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Por favor, ingrese un monto válido.");
+        return;
+    }
+
+// Validar si la cuenta de origen tiene saldo suficiente
+    Integer cuentaOrigenId = getAccountIdByCriteria("transaction_type", "TRANSFER"); // Usamos el método para obtener el account_id de la cuenta de origen
+    if (cuentaOrigenId == null || !tieneSaldoSuficiente(cuentaOrigenId, monto)) {
+    JOptionPane.showMessageDialog(null, "Saldo insuficiente en la cuenta de origen o cuenta no encontrada.");
+    return;
+    }
+
+
+    // Validar que la cuenta de destino exista
+    if (!existeCuenta(Integer.parseInt(userIdDestino))) {
+        JOptionPane.showMessageDialog(null, "La cuenta de destino no existe.");
+        return;
+    }
+
+    // Realizar la transferencia (llamando al método de transferencia)
+    Date fecha = new Date(System.currentTimeMillis()); // Fecha actual
+    boolean exito = realizarTransferencia(cuentaOrigenId, Integer.parseInt(userIdDestino), monto, descripcion, fecha);
+
+    if (exito) {
+        JOptionPane.showMessageDialog(null, "Transferencia realizada con éxito.");
+    } else {
+        JOptionPane.showMessageDialog(null, "Error al realizar la transferencia. Intente nuevamente.");
+    }
+}
+
+// Método para realizar la transferencia
+private boolean realizarTransferencia(int cuentaOrigenId, int cuentaDestinoId, BigDecimal monto, String descripcion, Date date) {
+    
+    // Lógica de conexión y transferencia que ya habíamos discutido
+    return TransactionModel.transfer(cuentaOrigenId, cuentaDestinoId, monto, descripcion, (java.sql.Date) date);
+}
+
+// Método para verificar si la cuenta de origen tiene saldo suficiente
+private boolean tieneSaldoSuficiente(int cuentaId, BigDecimal monto) {
+    // Lógica de comprobación de saldo suficiente
+    return TransactionModel.hasSufficientBalance(cuentaId, monto);
+}
+
+// Método para verificar si la cuenta existe
+private boolean existeCuenta(int cuentaId) {
+    // Lógica de comprobación si la cuenta existe
+    return TransactionModel.accountExists(cuentaId);
         
     }//GEN-LAST:event_btnTransferMouseClicked
 
@@ -293,6 +361,10 @@ public class Transferir extends javax.swing.JFrame {
         frmInterfaz.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void txtMontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMontoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMontoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -346,8 +418,8 @@ public class Transferir extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lblBalance;
     private javax.swing.JLabel lblId;
-    private javax.swing.JFormattedTextField txfAmount;
-    private javax.swing.JTextField txfDescription;
-    private javax.swing.JTextField txfUser;
+    private javax.swing.JTextField txtDescripcion;
+    private javax.swing.JFormattedTextField txtMonto;
+    private javax.swing.JTextField txtUserIdDestino;
     // End of variables declaration//GEN-END:variables
 }

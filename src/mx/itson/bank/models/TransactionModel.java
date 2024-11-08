@@ -133,7 +133,7 @@ public class TransactionModel {
     }
 
     // Método para saber si la cuenta existe 
-    private static boolean accountExists(int accountId) {
+    public static boolean accountExists(int accountId) {
         boolean exists = false;
         try (Connection connection = MySQLConnection.get()) {
             String query = "SELECT COUNT(*) FROM accounts WHERE id = ?";
@@ -149,9 +149,29 @@ public class TransactionModel {
         }
         return exists;
     }
+    
+
+    public static Integer getAccountIdByCriteria(String criteriaColumn, String criteriaValue) {
+    Integer accountId = null;
+    try (Connection connection = MySQLConnection.get()) {
+        // Consulta ajustada a la tabla transactions
+        String query = "SELECT account_id FROM transactions WHERE " + criteriaColumn + " = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, criteriaValue);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                accountId = rs.getInt("account_id");
+            }
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return accountId;
+}
+
 
     // Método para ver si el saldo es suficiente o no tiene dineroxddd
-    private static boolean hasSufficientBalance(int accountId, BigDecimal amount) {
+    public static boolean hasSufficientBalance(int accountId, BigDecimal amount) {
         boolean sufficient = false;
         try (Connection connection = MySQLConnection.get()) {
             String query = "SELECT balance FROM accounts WHERE id = ?";
