@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import mx.itson.bank.entities.Account;
 import mx.itson.bank.entities.Client;
 import mx.itson.bank.entities.Transaction;
+import mx.itson.bank.models.AccountModel;
 import mx.itson.bank.models.ClientModel;
 import mx.itson.bank.models.TransactionModel;
 
@@ -214,16 +215,26 @@ public class Depositar extends javax.swing.JFrame {
     }//GEN-LAST:event_txfIdActionPerformed
 
     private void btnDepositMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDepositMouseClicked
-        String money = txfAmount.getText();
-        int accountId= Integer.parseInt(txfId.getText());
-        BigDecimal amount= new BigDecimal(money.replaceAll(",", ""));
         
-        TransactionModel.deposit(accountId, amount);
-                
-        Interfaz interfaz = new Interfaz();
-        interfaz.setAccount(this.account.getClientId());
-        interfaz.setVisible(true);
-        this.dispose();
+        if(!(txfId.getText().length()==0 || txfAmount.getText().length()==0)){
+            String money = txfAmount.getText();
+            int accountId= Integer.parseInt(txfId.getText());
+            BigDecimal amount= new BigDecimal(money.replaceAll(",", ""));
+            
+            if(AccountModel.searchAccount(accountId)){
+                TransactionModel.deposit(accountId, amount);
+
+                Interfaz interfaz = new Interfaz();
+                interfaz.setAccount(this.account.getClientId());
+                interfaz.setVisible(true);
+                this.dispose();
+            }else{
+                JOptionPane.showMessageDialog(this, "Cuenta no existente");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Favor de rellenar los campos");
+        }
+        
     }//GEN-LAST:event_btnDepositMouseClicked
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
