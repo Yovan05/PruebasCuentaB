@@ -4,9 +4,16 @@
  */
 package mx.itson.bank.ui;
 
+import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import javax.swing.JOptionPane;
 import mx.itson.bank.entities.Account;
 import mx.itson.bank.entities.Client;
+import mx.itson.bank.entities.Transaction;
+import mx.itson.bank.models.AccountModel;
 import mx.itson.bank.models.ClientModel;
+import mx.itson.bank.models.TransactionModel;
 
 /**
  *
@@ -85,19 +92,25 @@ public class Depositar extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("ID Cuenta Bancaria:");
 
-        txfId.setBackground(new java.awt.Color(255, 255, 255));
-        txfId.setForeground(new java.awt.Color(0, 0, 0));
         txfId.setBorder(null);
         txfId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txfIdActionPerformed(evt);
             }
         });
+        txfId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txfIdKeyTyped(evt);
+            }
+        });
 
-        txfAmount.setBackground(new java.awt.Color(255, 255, 255));
         txfAmount.setBorder(null);
-        txfAmount.setForeground(new java.awt.Color(0, 0, 0));
         txfAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        txfAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txfAmountKeyTyped(evt);
+            }
+        });
 
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Cantidad a depositar:");
@@ -202,7 +215,25 @@ public class Depositar extends javax.swing.JFrame {
     }//GEN-LAST:event_txfIdActionPerformed
 
     private void btnDepositMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDepositMouseClicked
+        
+        if(!(txfId.getText().length()==0 || txfAmount.getText().length()==0)){
+            String money = txfAmount.getText();
+            int accountId= Integer.parseInt(txfId.getText());
+            BigDecimal amount= new BigDecimal(money.replaceAll(",", ""));
+            
+            if(AccountModel.searchAccount(accountId)){
+                TransactionModel.deposit(accountId, amount);
 
+                Interfaz interfaz = new Interfaz();
+                interfaz.setAccount(this.account.getClientId());
+                interfaz.setVisible(true);
+                this.dispose();
+            }else{
+                JOptionPane.showMessageDialog(this, "Cuenta no existente");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Favor de rellenar los campos");
+        }
         
     }//GEN-LAST:event_btnDepositMouseClicked
 
@@ -212,6 +243,22 @@ public class Depositar extends javax.swing.JFrame {
         interfaz.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void txfIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfIdKeyTyped
+        char key = evt.getKeyChar();
+        if (!Character.isDigit(key) && key != KeyEvent.VK_BACK_SPACE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "Solo se admiten números");
+        }
+    }//GEN-LAST:event_txfIdKeyTyped
+
+    private void txfAmountKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfAmountKeyTyped
+        char key = evt.getKeyChar();
+        if (!Character.isDigit(key) && key != KeyEvent.VK_BACK_SPACE) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "Solo se admiten números");
+        }
+    }//GEN-LAST:event_txfAmountKeyTyped
 
     /**
      * @param args the command line arguments

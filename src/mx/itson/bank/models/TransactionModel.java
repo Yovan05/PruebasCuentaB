@@ -6,13 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import mx.itson.bank.persistence.MySQLConnection;
 
 public class TransactionModel {
 
     // Método para realizar un depósito
-    public static boolean deposit(int accountId, BigDecimal amount, String description, Date date) {
+    public static boolean deposit(int accountId, BigDecimal amount) {
         boolean success = false;
+        Date date = new Date(new java.util.Date().getTime());
         try (Connection connection = MySQLConnection.get()) {
             // Verificar si la cuenta existe
             if (!accountExists(accountId)) {
@@ -28,13 +30,13 @@ public class TransactionModel {
             }
 
             // Registrar la transacción
-            String insertTransactionQuery = "INSERT INTO transactions (account_id, transaction_type, amount, transaction_description, date) VALUES (?, 'DEPOSIT', ?, ?, ?)";
+            String insertTransactionQuery = "INSERT INTO transactions (account_id, transaction_type, amount, date) VALUES (?, 'DEPOSIT', ?, ?)";
             try (PreparedStatement insertStmt = connection.prepareStatement(insertTransactionQuery)) {
                 insertStmt.setInt(1, accountId);
                 insertStmt.setBigDecimal(2, amount);
-                insertStmt.setString(3, description);
-                insertStmt.setDate(4, date);
+                insertStmt.setDate(3, date);
                 insertStmt.executeUpdate();
+                connection.close();
             }
 
             success = true;

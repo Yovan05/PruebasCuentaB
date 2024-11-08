@@ -7,6 +7,9 @@ package mx.itson.bank.ui;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import mx.itson.bank.entities.Account;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.models.ClientModel;
 import mx.itson.bank.models.TransactionModel;
 import static mx.itson.bank.models.TransactionModel.getAccountIdByCriteria;
 
@@ -16,13 +19,24 @@ import static mx.itson.bank.models.TransactionModel.getAccountIdByCriteria;
  */
 public class Transferir extends javax.swing.JFrame {
     
-    
+    Account account = new Account();
+    Client client = new Client();
+
+
 
 
     public Transferir() {
         initComponents();
     }
 
+    /**
+     * Get the account and client
+     * @param account the account to set
+     */
+    public void setAccount(Account account){
+        this.account = account;
+        this.client= ClientModel.getUserByID(account.getClientId());
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
