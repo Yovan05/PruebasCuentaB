@@ -4,12 +4,18 @@
  */
 package mx.itson.bank.ui;
 
+import mx.itson.bank.entities.Account;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.models.ClientModel;
+
 /**
  *
  * @author ricardorodriguez
  */
 public class Transferir extends javax.swing.JFrame {
 
+    Account account = new Account();
+    Client client = new Client();
     /**
      * Creates new form Transferir
      */
@@ -17,6 +23,14 @@ public class Transferir extends javax.swing.JFrame {
         initComponents();
     }
 
+    /**
+     * Get the account and client
+     * @param account the account to set
+     */
+    public void setAccount(Account account){
+        this.account = account;
+        this.client= ClientModel.getUserByID(account.getClientId());
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
