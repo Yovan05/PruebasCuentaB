@@ -214,9 +214,9 @@ public class Depositar extends javax.swing.JFrame {
     }//GEN-LAST:event_txfIdActionPerformed
 
     private void btnDepositMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDepositMouseClicked
-        
+        String money = txfAmount.getText();
         int accountId= Integer.parseInt(txfId.getText());
-        BigDecimal amount= new BigDecimal(txfAmount.getText());
+        BigDecimal amount= new BigDecimal(money.replaceAll(",", ""));
         
         TransactionModel.deposit(accountId, amount);
                 
