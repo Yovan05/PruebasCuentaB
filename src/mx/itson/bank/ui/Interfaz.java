@@ -317,6 +317,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btnTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferActionPerformed
         Transferir frmTransferir = new Transferir();
+        frmTransferir.setAccount(this.account);
         frmTransferir.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnTransferActionPerformed
