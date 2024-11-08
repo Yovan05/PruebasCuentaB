@@ -182,6 +182,7 @@ public class Transferir extends javax.swing.JFrame {
 
         btnTransfer.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         btnTransfer.setText("Tranferir");
+        btnTransfer.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnTransfer.setFocusCycleRoot(true);
         btnTransfer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -210,12 +211,9 @@ public class Transferir extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtUserIdDestino)
                             .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-                            .addComponent(txtMonto))))
+                            .addComponent(txtMonto)
+                            .addComponent(btnTransfer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(55, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(130, 130, 130))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -362,18 +360,21 @@ if (!existeCuenta(Integer.parseInt(userIdDestino))) {
 
 // Método para realizar la transferencia
 private boolean realizarTransferencia(int cuentaOrigenId, int cuentaDestinoId, BigDecimal monto, String descripcion, Date date) {
-    cuentaOrigenId=this.account.getId();
-    // Lógica de conexión y transferencia que ya habíamos discutido
-    System.out.println("Valor de date: " + date);
-if (date != null) {
-    return TransactionModel.transfer(cuentaOrigenId, cuentaDestinoId, monto, descripcion, new java.sql.Date(date.getTime()));
-} else {
-    // Manejar el caso de fecha nula
-    System.out.println("La fecha es nula, manejando caso especial...");
-    return false; // Devuelve false o haz la lógica que sea adecuada
-}
+    cuentaOrigenId = this.account.getId(); // Asegura que cuentaOrigenId sea el correcto
 
+    // Valida la fecha de entrada
+    if (date == null) {
+        date = new Date(); // Usa la fecha actual si no está especificada
+    }
+    // Convertir fecha a SQL
+    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 
+    // Llamada al método de transferencia en TransactionModel con validación de éxito
+    boolean transferenciaExitosa = TransactionModel.transfer(cuentaOrigenId, cuentaDestinoId, monto, descripcion, sqlDate);
+    if (!transferenciaExitosa) {
+        System.out.println("Error al realizar la transferencia entre cuentas ID " + cuentaOrigenId + " y " + cuentaDestinoId);
+    }
+    return transferenciaExitosa;
 }
 
 // Método para verificar si la cuenta de origen tiene saldo suficiente

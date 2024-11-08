@@ -257,9 +257,6 @@ public class Retirar extends javax.swing.JFrame {
         frmInterfaz.setAccount(this.account.getClientId());
         frmInterfaz.setVisible(true);
 
-        Interfaz interfaz = new Interfaz();
-        interfaz.setAccount(this.account.getClientId());
-        interfaz.setVisible(true);
 
         this.dispose();
     }//GEN-LAST:event_btnReturnActionPerformed
