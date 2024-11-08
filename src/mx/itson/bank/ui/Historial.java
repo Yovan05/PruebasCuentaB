@@ -4,11 +4,31 @@
  */
 package mx.itson.bank.ui;
 
+import java.math.BigDecimal;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import mx.itson.bank.entities.Account;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.entities.Transaction;
+import mx.itson.bank.enums.TransactionType;
+import mx.itson.bank.models.TransactionModel;
+import mx.itson.bank.persistence.MySQLConnection;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import mx.itson.bank.models.AccountModel;
+import mx.itson.bank.models.ClientModel;
+
+
 /**
  *
  * @author ricardorodriguez
  */
+
 public class Historial extends javax.swing.JFrame {
+    Account account = new Account();
+    Client client = new Client();
+    List <Transaction> transactions = new ArrayList<>();
 
     /**
      * Creates new form Historial
@@ -16,6 +36,41 @@ public class Historial extends javax.swing.JFrame {
     public Historial() {
         initComponents();
     }
+    /*
+    public Historial() {
+        initComponents();
+        transactions = TransactionModel.getTransactionHistory(account.getId());
+        cargarDatos();
+        
+    }
+    
+    public void setAccount(int clientId){
+        this.account = AccountModel.getAccountByClientId(clientId);
+        this.client= ClientModel.getUserByID(account.getClientId());
+        lblNombre.setText(client.getName());
+       
+    }
+    */
+    public void setAccount(Account account){
+        this.account = account;
+        this.client= ClientModel.getUserByID(account.getClientId());
+        lblNombre.setText(client.getName());
+        transactions = TransactionModel.getTransactionHistory(account.getId());
+        cargarDatos();
+    }
+    
+    private void cargarDatos(){
+    // Crear un modelo de tabla y definir las columnas
+    DefaultTableModel model = (DefaultTableModel) TblMovimientos.getModel();
+        model.setNumRows(0);
+        //int nList = 0;
+        for(Transaction t : transactions){
+           // nList ++;
+            model.addRow(new Object[]{
+                t.getDate(), t.getTransactionType(),t.getAmount(), t.getRelatedAccountId()
+            });
+        }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,8 +85,9 @@ public class Historial extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TblMovimientos = new javax.swing.JTable();
         btnReturn = new javax.swing.JButton();
+        lblNombre = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,7 +116,7 @@ public class Historial extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TblMovimientos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -68,10 +124,18 @@ public class Historial extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "fecha", "Tipo", "Cantidad", "Destinatario"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(TblMovimientos);
 
         btnReturn.setBackground(javax.swing.UIManager.getDefaults().getColor("Component.focusColor"));
         btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mx/itson/bank/img/flecha-hacia-atras.png"))); // NOI18N
@@ -83,25 +147,36 @@ public class Historial extends javax.swing.JFrame {
             }
         });
 
+        lblNombre.setText("Nombre");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(54, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnReturn)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnReturn))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(35, 35, 35)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 53, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblNombre)
+                .addGap(35, 35, 35)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addComponent(btnReturn)
@@ -123,8 +198,9 @@ public class Historial extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
-        Interfaz frmInterfaz = new Interfaz();
-        frmInterfaz.setVisible(true);
+        Interfaz interfaz = new Interfaz();
+        interfaz.setAccount(this.account.getClientId());
+        interfaz.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnReturnActionPerformed
 
@@ -164,11 +240,12 @@ public class Historial extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TblMovimientos;
     private javax.swing.JButton btnReturn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblNombre;
     // End of variables declaration//GEN-END:variables
 }

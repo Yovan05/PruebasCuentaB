@@ -303,8 +303,9 @@ public class Transferir extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTransferMouseClicked
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
-        Interfaz frmInterfaz = new Interfaz();
-        frmInterfaz.setVisible(true);
+        Interfaz interfaz = new Interfaz();
+        interfaz.setAccount(this.account.getClientId());
+        interfaz.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnReturnActionPerformed
 
