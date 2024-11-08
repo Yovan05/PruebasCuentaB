@@ -36,6 +36,9 @@ public class Transferir extends javax.swing.JFrame {
     public void setAccount(Account account){
         this.account = account;
         this.client= ClientModel.getUserByID(account.getClientId());
+        lblBalance.setText(account.getBalance()+"");
+        lblId.setText(account.getId()+"");
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -306,10 +309,11 @@ public class Transferir extends javax.swing.JFrame {
          // Obtener los datos de los campos de texto
     String userIdDestino = txtUserIdDestino.getText();
     String montoStr = txtMonto.getText();
+    String formatmontoStr = montoStr.replaceAll(",", "");
     String descripcion = txtDescripcion.getText();
 
     // Validar que los campos no estén vacíos
-    if (userIdDestino.isEmpty() || montoStr.isEmpty() || descripcion.isEmpty()) {
+    if (userIdDestino.isEmpty() || formatmontoStr.isEmpty() || descripcion.isEmpty()) {
         JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos.");
         return;
     }
@@ -317,7 +321,7 @@ public class Transferir extends javax.swing.JFrame {
     // Validar que el monto sea un número positivo asd
     BigDecimal monto;
     try {
-        monto = new BigDecimal(montoStr);
+        monto = new BigDecimal(formatmontoStr);
         if (monto.compareTo(BigDecimal.ZERO) <= 0) {
             JOptionPane.showMessageDialog(null, "El monto debe ser mayor que 0.");
             return;
@@ -346,7 +350,10 @@ if (!existeCuenta(Integer.parseInt(userIdDestino))) {
     boolean exito = realizarTransferencia(cuentaOrigenId, Integer.parseInt(userIdDestino), monto, descripcion, fecha);
 
     if (exito) {
-        JOptionPane.showMessageDialog(null, "Transferencia realizada con éxito.");
+        Interfaz frmInterfaz = new Interfaz();
+        frmInterfaz.setAccount(this.account.getClientId());
+        frmInterfaz.setVisible(true);
+        this.dispose();
     } else {
         JOptionPane.showMessageDialog(null, "Error al realizar la transferencia. Intente nuevamente.");
     }
@@ -355,7 +362,7 @@ if (!existeCuenta(Integer.parseInt(userIdDestino))) {
 
 // Método para realizar la transferencia
 private boolean realizarTransferencia(int cuentaOrigenId, int cuentaDestinoId, BigDecimal monto, String descripcion, Date date) {
-    
+    cuentaOrigenId=this.account.getId();
     // Lógica de conexión y transferencia que ya habíamos discutido
     System.out.println("Valor de date: " + date);
 if (date != null) {
@@ -383,9 +390,9 @@ private boolean existeCuenta(int cuentaId) {
     }//GEN-LAST:event_btnTransferMouseClicked
     
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
-        Interfaz interfaz = new Interfaz();
-        interfaz.setAccount(this.account.getClientId());
-        interfaz.setVisible(true);
+        Interfaz frmInterfaz = new Interfaz();
+        frmInterfaz.setAccount(this.account.getClientId());
+        frmInterfaz.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnReturnActionPerformed
 

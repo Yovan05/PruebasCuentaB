@@ -325,6 +325,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btnWithdrawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWithdrawActionPerformed
         Retirar frmRetirar = new Retirar();
+        frmRetirar.setAccount(this.account);
         frmRetirar.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnWithdrawActionPerformed

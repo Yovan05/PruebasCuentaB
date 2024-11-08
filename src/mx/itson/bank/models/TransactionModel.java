@@ -53,8 +53,9 @@ public class TransactionModel {
     }
 
     // Método para realizar un retiro
-    public static boolean withdraw(int accountId, BigDecimal amount, String description, Date date) {
+    public static boolean withdraw(int accountId, BigDecimal amount) {
         boolean success = false;
+        Date date = new Date(new java.util.Date().getTime());
         try (Connection connection = MySQLConnection.get()) {
             // Verificar si la cuenta existe y tiene saldo suficiente
             if (!accountExists(accountId) || !hasSufficientBalance(accountId, amount)) {
@@ -70,13 +71,14 @@ public class TransactionModel {
             }
 
             // Registrar la transacción
-            String insertTransactionQuery = "INSERT INTO transactions (account_id, transaction_type, amount, transaction_description, date) VALUES (?, 'WITHDRAW', ?, ?, ?)";
+            String insertTransactionQuery = "INSERT INTO transactions (account_id, transaction_type, amount, date) VALUES (?, 'WITHDRAW', ?, ?)";
             try (PreparedStatement insertStmt = connection.prepareStatement(insertTransactionQuery)) {
                 insertStmt.setInt(1, accountId);
                 insertStmt.setBigDecimal(2, amount);
-                insertStmt.setString(3, description);
-                insertStmt.setDate(4, date);
+                insertStmt.setDate(3, date);
+
                 insertStmt.executeUpdate();
+                connection.close();
             }
 
             success = true;
@@ -261,4 +263,5 @@ private static TransactionType mapTransactionType(String transactionTypeStr) {
             return null; // Devuelve null si no hay coincidencia
     }
 }
+
 }
