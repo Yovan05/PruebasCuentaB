@@ -330,7 +330,7 @@ public class Transferir extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Por favor, ingrese un monto válido.");
         return;
     }
-    Integer cuentaOrigenId = getAccountIdByCriteria("transaction_type", "TRANSFER");
+    Integer cuentaOrigenId = this.account.getId();
 System.out.println("Cuenta de origen obtenida: " + cuentaOrigenId);
 if (cuentaOrigenId == null || !tieneSaldoSuficiente(cuentaOrigenId, monto)) {
     JOptionPane.showMessageDialog(null, "Saldo insuficiente en la cuenta de origen o cuenta no encontrada.");
@@ -359,7 +359,7 @@ if (!existeCuenta(Integer.parseInt(userIdDestino))) {
     }
     
 }
-
+    Date date = new Date();
 // Método para realizar la transferencia
 private boolean realizarTransferencia(int cuentaOrigenId, int cuentaDestinoId, BigDecimal monto, String descripcion, Date date) {
     cuentaOrigenId=this.account.getId();
