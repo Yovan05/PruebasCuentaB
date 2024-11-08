@@ -26,7 +26,7 @@ public class Pruebas {
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         
-        String name = "jshdb";
+        /*String name = "jshdb";
         String password = "hola";
         String user ="tatata";
         ClientKey clienKey = new ClientKey();
@@ -37,10 +37,10 @@ public class Pruebas {
         
         Client client = new Client();
         client =ClientModel.getUser(user);
-        AccountModel.save(client.getId(), BigDecimal.valueOf(0));
+        AccountModel.save(client.getId(), BigDecimal.valueOf(0));*/
         
      //   boolean register = ClientModel.save("testeo", "Contra123");
-        System.out.println(register);
+//        System.out.println(AccountModel.searchUser(20));
         
         
         

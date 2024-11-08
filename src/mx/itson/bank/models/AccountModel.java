@@ -112,4 +112,32 @@ public class AccountModel {
         return account;
     }
     
+    /**
+     * Check if there is another account with the same id
+     * @param id of the client to search
+     * @return boolean where if true, a user with that id already exists and if false, no one with the same id exists
+     */
+    public static boolean searchAccount(int id){
+        boolean result = false;
+        try {
+            Connection connection = MySQLConnection.get();
+            PreparedStatement statement = connection.prepareStatement("Select COUNT(*) FROM accounts where id=?;");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                int numberUsers = resultSet.getInt(1);
+                if(numberUsers>0){
+                    result = true;
+                }
+            }
+            connection.close();
+   
+        } catch (SQLException ex) {
+            System.err.println("Error: "+ex.getMessage());
+        }
+        
+        
+        return result;
+    }
+    
 }
