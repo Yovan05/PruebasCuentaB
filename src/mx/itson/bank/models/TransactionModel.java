@@ -252,7 +252,7 @@ private static TransactionType mapTransactionType(String transactionTypeStr) {
         case "DEPOSIT":
         case "DEPOSITS":
             return TransactionType.DEPOSITS;
-        case "WITHDRAWAL":
+        case "WITHDRAW":
         case "WITHDRAWALS":
             return TransactionType.WITHDRAWALS;
         case "TRANSFER":
