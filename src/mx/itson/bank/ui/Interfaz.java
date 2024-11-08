@@ -6,6 +6,7 @@ package mx.itson.bank.ui;
 
 import mx.itson.bank.entities.Account;
 import mx.itson.bank.entities.Client;
+import mx.itson.bank.models.AccountModel;
 import mx.itson.bank.models.ClientModel;
 
 /**
@@ -25,10 +26,10 @@ public class Interfaz extends javax.swing.JFrame {
     
     /**
      * Fill the labels
-     * @param account the account to set
+     * @param clientId the account to set
      */
-    public void setAccount(Account account){
-        this.account = account;
+    public void setAccount(int clientId){
+        this.account = AccountModel.getAccountByClientId(clientId);
         this.client= ClientModel.getUserByID(account.getClientId());
         lblName.setText(client.getName());
         lblId.setText(account.getId()+"");
@@ -308,8 +309,10 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btnDepositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepositActionPerformed
         Depositar frmDepositar = new Depositar();
+        frmDepositar.setAccount(this.account);
         frmDepositar.setVisible(true);
         this.dispose();
+
     }//GEN-LAST:event_btnDepositActionPerformed
 
     private void btnTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferActionPerformed
