@@ -87,6 +87,11 @@ public class AccountModel {
         return result;
     }
     
+    /**
+     * Get the Account object by cliendID
+     * @param clientId of the account to search
+     * @return the requested Client
+     */
     public static Account getAccountByClientId(int clientId) {
         Account account = new Account();
         try {
