@@ -243,10 +243,9 @@ public class Login extends javax.swing.JFrame {
             try {
                 if(Encrypt.login(key.getPublicKey(), password, client.getPassword())){                   
                     Interfaz interfaz = new Interfaz();
-                    Account account = new Account();
-                    account = AccountModel.getAccountByClientId(client.getId());
-                    interfaz.setAccount(account);
+                    interfaz.setAccount(client.getId());
                     interfaz.setVisible(true);   
+                    this.dispose();
                 }else{
                     JOptionPane.showMessageDialog(this, "Contraseña incorrecta");
                 }
