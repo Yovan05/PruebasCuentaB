@@ -4,18 +4,41 @@
  */
 package mx.itson.bank.ui;
 
+import mx.itson.bank.entities.Account;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.models.ClientModel;
+
 /**
  *
  * @author ricardorodriguez
  */
 public class Interfaz extends javax.swing.JFrame {
 
+    Account account = new Account();
+    Client client = new Client();
     /**
      * Creates new form Interfaz
      */
     public Interfaz() {
         initComponents();
+   //     updateData();
     }
+    
+    public void setAccount(Account account){
+        this.account = account;
+        this.client= ClientModel.getUserByID(account.getClientId());
+        lblName.setText(client.getName());
+        lblId.setText(account.getId()+"");
+        lblBalance.setText(account.getBalance()+"");
+
+    }
+    
+   /* public void updateData(){
+        this.client= ClientModel.getUserByID(account.getClientId());
+        lblName.setText(client.getName());
+        lblId.setText(account.getId()+"");
+        lblBalance.setText(account.getBalance()+"");
+    }*/
 
     /**
      * This method is called from within the constructor to initialize the form.
