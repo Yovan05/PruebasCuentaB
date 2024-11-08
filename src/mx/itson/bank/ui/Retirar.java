@@ -4,11 +4,25 @@
  */
 package mx.itson.bank.ui;
 
+import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import mx.itson.bank.entities.Account;
+import mx.itson.bank.entities.Client;
+import mx.itson.bank.models.AccountModel;
+import mx.itson.bank.models.ClientModel;
+import mx.itson.bank.models.TransactionModel;
+
 /**
  *
  * @author ricardorodriguez
  */
 public class Retirar extends javax.swing.JFrame {
+    
+    Account account = new Account();
+    Client client = new Client();
+
 
     /**
      * Creates new form Depositar
@@ -16,6 +30,15 @@ public class Retirar extends javax.swing.JFrame {
     public Retirar() {
         initComponents();
     }
+    
+    
+        public void setAccount(Account account){
+        this.account = account;
+        this.client= ClientModel.getUserByID(account.getClientId());
+        txfId.setText(account.getId()+"");
+        txfId.setVisible(false);
+        lblCuenta.setVisible(false);
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,7 +53,7 @@ public class Retirar extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        lblCuenta = new javax.swing.JLabel();
         txfId = new javax.swing.JTextField();
         txfAmount = new javax.swing.JFormattedTextField();
         jLabel9 = new javax.swing.JLabel();
@@ -66,22 +89,23 @@ public class Retirar extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("ID Cuenta Bancaria:");
+        lblCuenta.setBackground(new java.awt.Color(255, 255, 255));
+        lblCuenta.setForeground(new java.awt.Color(255, 255, 255));
+        lblCuenta.setText("ID Cuenta Bancaria:");
 
-        txfId.setBackground(new java.awt.Color(255, 255, 255));
-        txfId.setForeground(new java.awt.Color(0, 0, 0));
         txfId.setBorder(null);
         txfId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txfIdActionPerformed(evt);
             }
         });
+        txfId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txfIdKeyTyped(evt);
+            }
+        });
 
-        txfAmount.setBackground(new java.awt.Color(255, 255, 255));
         txfAmount.setBorder(null);
-        txfAmount.setForeground(new java.awt.Color(0, 0, 0));
         txfAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
 
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -94,7 +118,7 @@ public class Retirar extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +131,7 @@ public class Retirar extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(lblCuenta)
                     .addComponent(txfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -116,10 +140,8 @@ public class Retirar extends javax.swing.JFrame {
                 .addGap(30, 30, 30))
         );
 
-        btnDeposit.setBackground(new java.awt.Color(255, 255, 255));
         btnDeposit.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         btnDeposit.setText("Retirar");
-        btnDeposit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnDeposit.setFocusCycleRoot(true);
         btnDeposit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -187,15 +209,53 @@ public class Retirar extends javax.swing.JFrame {
     }//GEN-LAST:event_txfIdActionPerformed
 
     private void btnDepositMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDepositMouseClicked
+            
+        
+        if(!(txfId.getText().length()==0 || txfAmount.getText().length()==0)){
+            String money = txfAmount.getText();
+            int accountId= Integer.parseInt(txfId.getText());
+            BigDecimal amount= new BigDecimal(money.replaceAll(",", ""));
+            if(this.account.getBalance().compareTo(amount)>0){
+               if(AccountModel.searchAccount(accountId)){
+                    TransactionModel.withdraw(accountId, amount);
 
+                    Interfaz interfaz = new Interfaz();
+                    interfaz.setAccount(this.account.getClientId());
+                    interfaz.setVisible(true);
+                    this.dispose();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Cuenta no existente");
+                } 
+            }else{
+                JOptionPane.showMessageDialog(this, "Saldo insuficiente");
+            }
+                
+            }else{
+                JOptionPane.showMessageDialog(this, "Favor de rellenar los campos");
+            }
+             
         
     }//GEN-LAST:event_btnDepositMouseClicked
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
+        System.out.println("Account ID: " + (this.account != null ? this.account.getClientId() : "null"));
+
         Interfaz frmInterfaz = new Interfaz();
+        frmInterfaz.setAccount(this.account.getClientId());
         frmInterfaz.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void txfIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfIdKeyTyped
+      char key = evt.getKeyChar();
+    if (key == KeyEvent.VK_BACK_SPACE || key == KeyEvent.VK_DELETE) {
+    // Consumir el evento si es la tecla de retroceso o de suprimir
+        evt.consume();
+            } else {
+                evt.consume(); // Consumir cualquier otra tecla (esto evita que se pueda escribir)
+    }
+
+    }//GEN-LAST:event_txfIdKeyTyped
 
     /**
      * @param args the command line arguments
@@ -237,11 +297,11 @@ public class Retirar extends javax.swing.JFrame {
     private javax.swing.JButton btnDeposit;
     private javax.swing.JButton btnReturn;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lblCuenta;
     private javax.swing.JFormattedTextField txfAmount;
     private javax.swing.JTextField txfId;
     // End of variables declaration//GEN-END:variables
